@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
@@ -74,11 +73,7 @@ const PurchaseOrderForm = ({ onSave, onCancel, order, purchaseRequests = [], acc
 
   const handleItemChange = (index, field, value) => {
     const newItems = [...formData.items];
-    if (field === 'account_id') {
-      newItems[index][field] = value ? value.id : null;
-    } else {
-      newItems[index][field] = value;
-    }
+    newItems[index][field] = value;
     if (field === 'quantity' || field === 'unitPrice') {
       newItems[index].amount = (Number(newItems[index].quantity) || 0) * (Number(newItems[index].unitPrice) || 0);
     }

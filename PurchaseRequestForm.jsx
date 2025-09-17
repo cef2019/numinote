@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useMemo } from 'react';
 import {
   Dialog,
@@ -45,7 +46,6 @@ export default function PurchaseRequestForm({ open, onOpenChange, onSave, purcha
           quantity: item.quantity || 1,
           unit_cost: item.unit_cost || '',
           total_cost: item.total_cost || '',
-          account_id: item.account_id || ''
         })) : [{ account_id: '', description: '', unit: '', quantity: 1, unit_cost: '', total_cost: '' }],
       });
     } else {
@@ -74,7 +74,11 @@ export default function PurchaseRequestForm({ open, onOpenChange, onSave, purcha
   
   const handleItemChange = (index, field, value) => {
     const newItems = [...formData.items];
-    newItems[index][field] = value;
+    if (field === 'account_id') {
+      newItems[index][field] = value ? value.id : null;
+    } else {
+      newItems[index][field] = value;
+    }
     
     if (field === 'quantity' || field === 'unit_cost') {
       const quantity = parseFloat(newItems[index].quantity) || 0;
@@ -142,7 +146,7 @@ export default function PurchaseRequestForm({ open, onOpenChange, onSave, purcha
                     <SelectTrigger><SelectValue placeholder="Link to a project (optional)" /></SelectTrigger>
                     <SelectContent>
                     <SelectItem value="none">None</SelectItem>
-                    {(projects || []).map(p => <SelectItem key={p.id} value={String(p.id)}>{p.name}</SelectItem>)}
+                    {projects.map(p => <SelectItem key={p.id} value={String(p.id)}>{p.name}</SelectItem>)}
                     </SelectContent>
                 </Select>
             </div>
@@ -202,7 +206,7 @@ export default function PurchaseRequestForm({ open, onOpenChange, onSave, purcha
                                 <td className="p-2"><Input value={item.unit} onChange={(e) => handleItemChange(index, 'unit', e.target.value)} /></td>
                                 <td className="p-2"><Input type="number" value={item.quantity} onChange={(e) => handleItemChange(index, 'quantity', e.target.value)} /></td>
                                 <td className="p-2"><Input type="number" value={item.unit_cost} onChange={(e) => handleItemChange(index, 'unit_cost', e.target.value)} /></td>
-                                <td className="p-2"><Input value={item.total_cost || '0.00'} readOnly className="bg-gray-100" /></td>
+                                <td className="p-2"><Input value={item.total_cost} readOnly className="bg-gray-100" /></td>
                                 <td className="p-2">
                                     {formData.items.length > 1 && (
                                         <Button variant="ghost" size="icon" onClick={() => removeItemRow(index)}><Trash2 className="w-4 h-4 text-red-500" /></Button>
